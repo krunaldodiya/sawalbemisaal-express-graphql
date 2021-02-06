@@ -2,57 +2,152 @@
 ### Do not make changes to this file directly
 
 
+type AuthPayload {
+  token: String
+  user: User
+}
+
+type Country {
+  created_at: DateTime!
+  id: String!
+  name: String!
+  phonecode: String!
+  shortname: String!
+  updated_at: DateTime!
+}
+
+input Cursor {
+  id: String!
+}
+
+scalar DateTime
+
+type FollowStatus {
+  is_follower: Boolean
+  is_following: Boolean
+}
+
+enum Gender {
+  Female
+  Male
+  None
+}
+
+type Language {
+  created_at: DateTime!
+  id: String!
+  name: String!
+  nickname: String!
+  updated_at: DateTime!
+}
+
+type Message {
+  created_at: DateTime!
+  id: String!
+  message: String!
+  receiver_id: String!
+  sender_id: String!
+  updated_at: DateTime!
+}
+
 type Mutation {
-  createDraft(authorEmail: String!, content: String, title: String!): Post
-  deleteOnePost(where: PostWhereUniqueInput!): Post
-  publish(id: Int): Post
-  signupUser(data: UserCreateInput!): User!
-}
-
-type Post {
-  author: User
-  content: String
-  id: Int!
-  published: Boolean!
-  title: String!
-}
-
-input PostCreateNestedManyWithoutAuthorInput {
-  connect: [PostWhereUniqueInput!]
-  connectOrCreate: [PostCreateOrConnectWithoutauthorInput!]
-  create: [PostCreateWithoutAuthorInput!]
-}
-
-input PostCreateOrConnectWithoutauthorInput {
-  create: PostCreateWithoutAuthorInput!
-  where: PostWhereUniqueInput!
-}
-
-input PostCreateWithoutAuthorInput {
-  content: String
-  published: Boolean
-  title: String!
-}
-
-input PostWhereUniqueInput {
-  id: Int
+  addMessage(buddy_id: String!, message: String!): Message
+  addQueue(language_id: String!): Language
+  editProfile(dob: String!, email: String!, gender: Gender!, name: String!, username: String!): User
+  followUser(following_id: String!): User
+  requestOtp(country_id: String!, mobile: String!): String
+  verifyOtp(country_id: String!, mobile: String!, otp: String!): AuthPayload
 }
 
 type Query {
-  feed: [Post]
-  filterPosts(searchString: String): [Post]
-  post(where: PostWhereUniqueInput!): Post
+  checkFollowStatus(guest_id: String!): FollowStatus
+  countries: [Country]
+  findUserById(user_id: String!): User
+  languages: [Language]
+  me: User
+  messages(buddy_id: String!, cursor: Cursor, limit: Int!): [Message]
+  searchUsers(keywords: String!): [User]
+}
+
+type Subscription {
+  onMessageAdded: Message
+}
+
+type TransactionMeta {
+  description: String
+  title: String
+}
+
+enum TransactionStatus {
+  Failed
+  Pending
+  Success
+}
+
+enum TransactionType {
+  Deposit
+  Withdraw
 }
 
 type User {
-  email: String!
-  id: Int!
+  admin: Boolean!
+  avatar: String
+  bio: String
+  country: Country!
+  country_id: String!
+  created_at: DateTime!
+  demo: Boolean!
+  dob: String!
+  email: String
+  fcm_token: String
+  follow_status: FollowStatus
+  followers(after: UserWhereUniqueInput, before: UserWhereUniqueInput, first: Int, last: Int): [User!]!
+  following(after: UserWhereUniqueInput, before: UserWhereUniqueInput, first: Int, last: Int): [User!]!
+  gender: Gender!
+  id: String!
+  influencer: Boolean!
+  instagram_username: String
+  mobile: String!
   name: String
-  posts: [Post!]!
+  referral_code: String
+  status: Boolean!
+  updated_at: DateTime!
+  username: String
+  version: String
+  wallet: Wallet
 }
 
-input UserCreateInput {
-  email: String!
-  name: String
-  posts: PostCreateNestedManyWithoutAuthorInput
+input UserWhereUniqueInput {
+  email: String
+  id: String
+  mobile: String
+  username: String
+}
+
+type Wallet {
+  balance: Float!
+  created_at: DateTime!
+  id: String!
+  updated_at: DateTime!
+  user: User!
+  user_id: String!
+  wallet_transactions(after: WalletTransactionWhereUniqueInput, before: WalletTransactionWhereUniqueInput, first: Int, last: Int): [WalletTransaction!]!
+}
+
+type WalletTransaction {
+  amount: Float!
+  created_at: DateTime!
+  id: String!
+  meta: TransactionMeta
+  status: TransactionStatus
+  type: TransactionType
+  updated_at: DateTime!
+  user: User!
+  user_id: String!
+  wallet: Wallet!
+  wallet_id: String!
+}
+
+input WalletTransactionWhereUniqueInput {
+  id: String
 }

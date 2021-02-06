@@ -1,72 +1,51 @@
-import express from 'express'
+import express, { Router } from 'express'
 import { graphqlHTTP } from 'express-graphql'
 import { execute, subscribe } from 'graphql'
 import { createServer } from 'http'
 import path from 'path'
 import { SubscriptionServer } from 'subscriptions-transport-ws'
 import { createContext } from './context'
-import { schema } from './schema'
-import multer from 'multer'
+import { schemaWithMiddleware } from './schema'
 
 const PORT = process.env.PORT ?? 4000
 
 const app = express()
 
-const router = express.Router()
+const server = createServer(app)
 
-const storage = multer.diskStorage({
-  destination: async (req, file, cb) => {
-    cb(null, path.join(__dirname, 'uploads'))
-  },
-  filename: async (req, file, cb) => {
-    cb(null, file.originalname)
-  },
-})
+const router = Router()
 
-const upload = multer({ storage })
+app.use(router)
 
 app.set('view engine', 'pug')
 
 app.set('views', path.join(__dirname, 'views'))
 
-app.use(router)
-
 app.use(
   '/graphql',
-  graphqlHTTP({
-    schema,
-    context: createContext(),
-    graphiql: true,
+  graphqlHTTP(async (request) => {
+    const context = await createContext(request)
+
+    return {
+      schema: schemaWithMiddleware,
+      context,
+      graphiql: true,
+    }
   }),
 )
 
-const ws = createServer(app)
-
-ws.listen(PORT, () => {
+server.listen(PORT, () => {
   return new SubscriptionServer(
     {
       execute,
       subscribe,
-      schema,
+      schema: schemaWithMiddleware,
     },
     {
-      server: ws,
+      server,
       path: '/subscriptions',
     },
   )
-})
-
-router.get('/', async (req, res) => {
-  res.render('index', { title: 'Hey', message: 'Hello there!' })
-})
-
-router.get('/upload', async (req, res) => {
-  res.render('upload', { title: 'Hey', message: 'Hello there!' })
-})
-
-router.post('/upload', upload.single('avatar'), async (req, res) => {
-  console.log(req.file)
-  res.json({ status: 'ok' })
 })
 
 console.log(`Server ready at: http://localhost:${PORT}/graphql`)
