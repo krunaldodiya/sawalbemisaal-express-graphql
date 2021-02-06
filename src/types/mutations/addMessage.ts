@@ -7,7 +7,7 @@ export const addMessage = mutationField('addMessage', {
     const newMessage = await prisma.message.create({
       data: {
         receiver_id: buddy_id,
-        sender_id: user.id,
+        sender_id: user ? user.id : '',
         message,
       },
     })

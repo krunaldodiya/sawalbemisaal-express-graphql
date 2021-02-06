@@ -29,7 +29,7 @@ export const User = objectType({
 
     t.field('follow_status', {
       type: 'FollowStatus',
-      resolve: async (root, args, { prisma, user }) => {
+      resolve: async (root, args, { user }) => {
         if (user) {
           return userService.checkFollowStatus(root.id, user.id)
         }

@@ -6,7 +6,8 @@ import { execute, subscribe } from 'graphql'
 import { createServer } from 'http'
 import path from 'path'
 import { SubscriptionServer } from 'subscriptions-transport-ws'
-import { createContext } from './context'
+import { createContext, prisma, pubsub } from './context'
+import { getUserFromToken } from './libs/getUserFromToken'
 import { homeRoutes } from './routes/home'
 import { schemaWithMiddleware } from './schema'
 
@@ -47,6 +48,12 @@ server.listen(PORT, () => {
       execute,
       subscribe,
       schema: schemaWithMiddleware,
+      onConnect: async (connectionParams: any) => {
+        const token = connectionParams.headers['authorization']?.slice(7)
+        const user = await getUserFromToken(token, prisma)
+
+        return { user, pubsub, prisma }
+      },
     },
     {
       server,

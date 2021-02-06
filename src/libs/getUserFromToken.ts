@@ -1,13 +1,10 @@
 import { PrismaClient, User } from '@prisma/client'
-import { Request } from 'express'
 import jwt from 'jsonwebtoken'
 
 export const getUserFromToken = async (
-  request: Request,
+  token: string | undefined,
   prisma: PrismaClient,
 ): Promise<User | null> => {
-  const token = request.headers['authorization']?.slice(7)
-
   if (!token) {
     return null
   }

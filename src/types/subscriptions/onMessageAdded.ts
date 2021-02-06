@@ -3,17 +3,20 @@ import { subscriptionField } from 'nexus'
 
 export const onMessageAdded = subscriptionField('onMessageAdded', {
   type: 'Message',
+
   subscribe: withFilter(
     (parent, args, { pubsub }) => {
-      return pubsub.subscribe('MESSAGE_ADDED')
+      return pubsub.asyncIterator('MESSAGE_ADDED')
     },
-    ({ sender_id, receiver_id }, variables, { user }) => {
+    ({ payload }, args, { user }) => {
+      const { sender_id, receiver_id } = payload
+
       if (!user) return false
 
       return [sender_id, receiver_id].includes(user.id)
     },
   ),
-  resolve: (payload: any) => {
+  resolve: ({ payload }, args, ctx) => {
     return payload
   },
 })

@@ -17,7 +17,8 @@ export async function createContext(
   request: any,
   response: any,
 ): Promise<Context> {
-  const user = await getUserFromToken(request, prisma)
+  const token = request.headers['authorization']?.slice(7)
+  const user = await getUserFromToken(token, prisma)
 
   return { prisma, pubsub, user, request, response }
 }
