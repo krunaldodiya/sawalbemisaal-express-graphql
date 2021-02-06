@@ -6,7 +6,7 @@ export const getUserFromToken = async (
   request: Request,
   prisma: PrismaClient,
 ): Promise<User | null> => {
-  const token = request.headers['authorization']
+  const token = request.headers['authorization']?.slice(7)
 
   if (!token) {
     return null
