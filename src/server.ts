@@ -4,9 +4,9 @@ import express from 'express'
 import { graphqlHTTP } from 'express-graphql'
 import { execute, subscribe } from 'graphql'
 import { createServer } from 'http'
-import path from 'path'
 import { SubscriptionServer } from 'subscriptions-transport-ws'
 import { createContext, prisma, pubsub } from './context'
+import { config } from './libs/config'
 import { getUserFromToken } from './libs/getUserFromToken'
 import { homeRoutes } from './routes/home'
 import { schemaWithMiddleware } from './schema'
@@ -19,7 +19,7 @@ const server = createServer(app)
 
 app.set('view engine', 'pug')
 
-app.set('views', path.join(__dirname, 'views'))
+app.set('views', config('views'))
 
 app.use(homeRoutes)
 

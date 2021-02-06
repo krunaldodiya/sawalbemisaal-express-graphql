@@ -1,12 +1,12 @@
 import express from 'express'
 import multer from 'multer'
-import path from 'path'
+import { config } from '../libs/config'
 
 export const homeRoutes = express.Router()
 
 const storage = multer.diskStorage({
   destination: async (req, file, cb) => {
-    cb(null, path.join(__dirname, 'uploads'))
+    cb(null, config('public'))
   },
   filename: async (req, file, cb) => {
     cb(null, file.originalname)
