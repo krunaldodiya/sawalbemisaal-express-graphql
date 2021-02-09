@@ -1,10 +1,9 @@
 import Queue from 'bull'
 import { prisma } from '../context'
+import { config } from '../libs/config'
 import { userService } from '../services/UserService'
 
-export const followAdmin = new Queue('Follow Admin', {
-  redis: { port: 6379, host: '127.0.0.1', password: '' },
-})
+export const followAdmin = new Queue('Follow Admin', config('redis'))
 
 followAdmin.process(async (job, done) => {
   const { user_id } = job.data

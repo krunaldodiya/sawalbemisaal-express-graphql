@@ -1,9 +1,8 @@
 import Queue from 'bull'
 import { pubsub } from '../context'
+import { config } from '../libs/config'
 
-export const videoQueue = new Queue('Video Transcode', {
-  redis: { port: 6379, host: '127.0.0.1', password: '' },
-})
+export const videoQueue = new Queue('Video Transcode', config('redis'))
 
 interface VideoTranscodeInput extends Queue.Job {
   data: { language: string }
