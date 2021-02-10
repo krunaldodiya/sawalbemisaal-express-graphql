@@ -16,7 +16,7 @@ export const editProfile = mutationField('editProfile', {
   ) => {
     try {
       return await prisma.user.update({
-        where: { id: user.id },
+        where: { id: user ? user.id : '' },
         data: { name, email, username, gender, dob, status: true },
       })
     } catch (error) {

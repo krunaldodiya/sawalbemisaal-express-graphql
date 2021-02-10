@@ -7,7 +7,7 @@ export const followUser = mutationField('followUser', {
   resolve: async (parent, { following_id }, { user }) => {
     try {
       return userService.followUser({
-        user_id: user.id,
+        user_id: user ? user.id : '',
         guest_id: following_id,
       })
     } catch (error) {

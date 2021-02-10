@@ -15,8 +15,8 @@ export const messages = queryField((t) => {
           take: limit,
           where: {
             OR: [
-              { sender_id: user.id, receiver_id: buddy_id },
-              { sender_id: buddy_id, receiver_id: user.id },
+              { sender_id: user ? user.id : '', receiver_id: buddy_id },
+              { sender_id: buddy_id, receiver_id: user ? user.id : '' },
             ],
           },
         })

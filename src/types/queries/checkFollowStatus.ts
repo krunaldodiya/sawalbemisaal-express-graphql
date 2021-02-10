@@ -6,7 +6,7 @@ export const checkFollowStatus = queryField('checkFollowStatus', {
   args: { guest_id: nonNull(stringArg()) },
   resolve: async (parent, { guest_id }, { user }) => {
     try {
-      return userService.checkFollowStatus(guest_id, user.id)
+      return userService.checkFollowStatus(guest_id, user ? user.id : '')
     } catch (error) {
       throw new Error(error)
     }
