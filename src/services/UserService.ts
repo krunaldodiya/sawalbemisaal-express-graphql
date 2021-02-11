@@ -12,6 +12,7 @@ export class UserService {
     mobile: string
     country_id: string
   }) {
+    console.log('hello')
     const user = await prisma.user.findFirst({ where: { mobile } })
 
     if (user) {

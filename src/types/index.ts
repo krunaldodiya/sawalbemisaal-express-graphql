@@ -1,4 +1,4 @@
-import { TransactionStatus, TransactionType } from '@prisma/client'
+import { Gender, TransactionStatus, TransactionType } from '@prisma/client'
 import { Country } from './models/Country'
 import { Language } from './models/Language'
 import { Message } from './models/Message'
@@ -23,12 +23,17 @@ import { me } from './queries/me'
 import { onMessageAdded } from './subscriptions/onMessageAdded'
 import { searchUsers } from './queries/searchUsers'
 import { Cursor } from './inputs/Cursor'
+import { Ranking } from './models/Ranking'
+import { getRankings } from './queries/getRankings'
+import { RankingInput } from './enums/RankingInput'
 
 export default [
   AuthPayload,
   Cursor,
   TransactionType,
   TransactionStatus,
+  Gender,
+  RankingInput,
   TransactionMeta,
   Message,
   User,
@@ -51,4 +56,6 @@ export default [
   addMessage,
   messages,
   searchUsers,
+  Ranking,
+  getRankings,
 ]

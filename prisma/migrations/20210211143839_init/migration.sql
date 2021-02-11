@@ -7,6 +7,9 @@ CREATE TYPE "TransactionStatus" AS ENUM ('Success', 'Failed', 'Pending');
 -- CreateEnum
 CREATE TYPE "Gender" AS ENUM ('Male', 'Female', 'None');
 
+-- CreateEnum
+CREATE TYPE "RankingInput" AS ENUM ('Today', 'This_Month', 'All_Time');
+
 -- CreateTable
 CREATE TABLE "wallet_transactions" (
     "id" TEXT NOT NULL,
@@ -39,6 +42,18 @@ CREATE TABLE "messages" (
     "receiver_id" TEXT NOT NULL,
     "sender_id" TEXT NOT NULL,
     "message" TEXT NOT NULL,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "rankings" (
+    "id" TEXT NOT NULL,
+    "user_id" TEXT NOT NULL,
+    "prize" TEXT NOT NULL,
+    "period" TEXT NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
@@ -127,6 +142,9 @@ ALTER TABLE "wallet_transactions" ADD FOREIGN KEY ("user_id") REFERENCES "users"
 
 -- AddForeignKey
 ALTER TABLE "wallets" ADD FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "rankings" ADD FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "users" ADD FOREIGN KEY ("country_id") REFERENCES "countries"("id") ON DELETE CASCADE ON UPDATE CASCADE;

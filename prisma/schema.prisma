@@ -24,6 +24,12 @@ enum Gender {
   None
 }
 
+enum RankingInput {
+  Today
+  This_Month
+  All_Time
+}
+
 model WalletTransaction {
   id     String            @id @default(uuid())
   amount Float
@@ -70,6 +76,21 @@ model Message {
   @@map("messages")
 }
 
+model Ranking {
+  id String @id @default(uuid())
+
+  user    User   @relation(fields: [user_id], references: [id])
+  user_id String
+
+  prize  String
+  period String
+
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now()) @updatedAt
+
+  @@map("rankings")
+}
+
 model User {
   id                 String  @id @default(uuid())
   mobile             String  @unique
@@ -102,6 +123,8 @@ model User {
 
   following User[] @relation(name: "UserFollows", references: [id])
   followers User[] @relation(name: "UserFollows", references: [id])
+
+  rankings Ranking[]
 
   @@map("users")
 }

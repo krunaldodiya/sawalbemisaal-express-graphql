@@ -3,6 +3,7 @@ import cors from 'cors'
 import express from 'express'
 import { graphqlHTTP } from 'express-graphql'
 import { execute, subscribe } from 'graphql'
+import expressPlayground from 'graphql-playground-middleware-express'
 import { createServer } from 'http'
 import { SubscriptionServer } from 'subscriptions-transport-ws'
 import { createContext, prisma, pubsub } from './context'
@@ -41,6 +42,8 @@ app.use(
     }
   }),
 )
+
+app.get('/playground', expressPlayground({ endpoint: '/graphql' }))
 
 server.listen(PORT, () => {
   return new SubscriptionServer(

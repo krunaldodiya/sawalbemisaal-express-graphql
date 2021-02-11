@@ -63,10 +63,26 @@ type Query {
   checkFollowStatus(guest_id: String!): FollowStatus
   countries: [Country]
   findUserById(user_id: String!): User
+  getRankings(period: RankingInput!): [Ranking]
   languages: [Language]
   me: User
   messages(buddy_id: String!, cursor: Cursor, limit: Int!): [Message]
   searchUsers(keywords: String!): [User]
+}
+
+type Ranking {
+  created_at: DateTime!
+  id: String!
+  period: String!
+  prize: String!
+  updated_at: DateTime!
+  user: User!
+}
+
+enum RankingInput {
+  All_Time
+  This_Month
+  Today
 }
 
 type Subscription {

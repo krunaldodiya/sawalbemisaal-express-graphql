@@ -11,6 +11,7 @@ export const verifyOtp = mutationField('verifyOtp', {
     otp: nonNull(stringArg()),
   },
   resolve: async (parent, { country_id, mobile, otp }, { prisma }) => {
+    console.log('hello')
     try {
       if (process.env.NODE_ENV !== 'development') {
         const country = await prisma.country.findFirst({
@@ -35,6 +36,7 @@ export const verifyOtp = mutationField('verifyOtp', {
 
       return userService.createUser({ country_id, mobile })
     } catch (error) {
+      console.log(error, 'error')
       throw new Error(error)
     }
   },
