@@ -12,40 +12,47 @@ export class UserService {
     mobile: string
     country_id: string
   }) {
-    console.log('hello')
     const user = await prisma.user.findFirst({ where: { mobile } })
 
     if (user) {
       return this.authenticate(user)
     }
 
-    const newUser = await prisma.user.create({
-      data: {
-        mobile,
-        country_id,
-        referral_code: generatePin(),
-      },
-    })
+    try {
+      const newUser = await prisma.user.create({
+        data: {
+          mobile,
+          country_id,
+          referral_code: generatePin(),
+        },
+      })
 
-    await prisma.wallet.create({
-      data: {
-        balance: 10,
-        user_id: newUser.id,
-        wallet_transactions: {
-          create: {
-            user_id: newUser.id,
-            amount: 10,
-            type: 'Deposit',
-            status: 'Success',
-            meta: { title: 'joining_bonus', description: 'welcome to our app' },
+      await prisma.wallet.create({
+        data: {
+          balance: 10,
+          user_id: newUser.id,
+          wallet_transactions: {
+            create: {
+              user_id: newUser.id,
+              amount: 10,
+              type: 'Deposit',
+              status: 'Success',
+              meta: {
+                title: 'joining_bonus',
+                description: 'welcome to our app',
+              },
+            },
           },
         },
-      },
-    })
+      })
 
-    followAdmin.add({ user_id: newUser.id })
+      followAdmin.add({ user_id: newUser.id })
 
-    return this.authenticate(newUser)
+      return this.authenticate(newUser)
+    } catch (error) {
+      console.log(error)
+      throw new Error(error)
+    }
   }
 
   async findUserById(user_id: string) {

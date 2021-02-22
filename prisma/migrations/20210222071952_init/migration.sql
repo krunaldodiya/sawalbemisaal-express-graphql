@@ -49,6 +49,31 @@ CREATE TABLE "messages" (
 );
 
 -- CreateTable
+CREATE TABLE "tv_shows" (
+    "id" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+    "image" TEXT NOT NULL,
+    "about" TEXT NOT NULL,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "episodes" (
+    "id" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+    "image" TEXT NOT NULL,
+    "air_date" TIMESTAMP(3) NOT NULL,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "tv_show_id" TEXT,
+
+    PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "rankings" (
     "id" TEXT NOT NULL,
     "user_id" TEXT NOT NULL,
@@ -142,6 +167,9 @@ ALTER TABLE "wallet_transactions" ADD FOREIGN KEY ("user_id") REFERENCES "users"
 
 -- AddForeignKey
 ALTER TABLE "wallets" ADD FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "episodes" ADD FOREIGN KEY ("tv_show_id") REFERENCES "tv_shows"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "rankings" ADD FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
