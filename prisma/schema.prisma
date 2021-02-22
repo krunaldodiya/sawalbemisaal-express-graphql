@@ -81,7 +81,7 @@ model TvShow {
 
   name  String
   image String
-  about String
+  about String?
 
   created_at DateTime @default(now())
   updated_at DateTime @default(now()) @updatedAt

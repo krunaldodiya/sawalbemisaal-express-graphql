@@ -26,6 +26,10 @@ import { Cursor } from './inputs/Cursor'
 import { Ranking } from './models/Ranking'
 import { getRankings } from './queries/getRankings'
 import { RankingInput } from './enums/RankingInput'
+import { TvShow } from './models/TvShow'
+import { addTvShow } from './mutations/addTvShow'
+import { Episode } from './models/Episode'
+import { addEpisode } from './mutations/addEpisode'
 
 export default [
   AuthPayload,
@@ -38,6 +42,8 @@ export default [
   Message,
   User,
   Country,
+  TvShow,
+  Episode,
   Language,
   Wallet,
   WalletTransaction,
@@ -58,4 +64,6 @@ export default [
   searchUsers,
   Ranking,
   getRankings,
+  addTvShow,
+  addEpisode,
 ]

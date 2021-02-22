@@ -5,6 +5,11 @@ export const isAuthenticated = rule({ cache: 'contextual' })(
     return user !== null
   },
 )
+export const isAdmin = rule({ cache: 'contextual' })(
+  async (parent, args, { user }, info) => {
+    return user !== null && user.admin
+  },
+)
 
 export const permissions = shield({
   Query: {
@@ -20,6 +25,8 @@ export const permissions = shield({
     addMessage: isAuthenticated,
     followUser: isAuthenticated,
     editProfile: isAuthenticated,
+    addTvShow: isAdmin,
+    addEpisode: isAdmin,
   },
   Subscription: {
     onMessageAdded: isAuthenticated,
