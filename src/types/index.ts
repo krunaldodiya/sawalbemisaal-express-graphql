@@ -30,6 +30,8 @@ import { TvShow } from './models/TvShow'
 import { addTvShow } from './mutations/addTvShow'
 import { Episode } from './models/Episode'
 import { addEpisode } from './mutations/addEpisode'
+import { tvShows } from './queries/tvShows'
+import { episodes } from './queries/episodes'
 
 export default [
   AuthPayload,
@@ -66,4 +68,6 @@ export default [
   getRankings,
   addTvShow,
   addEpisode,
+  tvShows,
+  episodes,
 ]

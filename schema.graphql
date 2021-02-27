@@ -78,12 +78,14 @@ type Mutation {
 type Query {
   checkFollowStatus(guest_id: String!): FollowStatus
   countries: [Country]
+  episodes(tv_show_id: String!): [Episode]
   findUserById(user_id: String!): User
   getRankings(period: RankingInput!): [Ranking]
   languages: [Language]
   me: User
   messages(buddy_id: String!, cursor: Cursor, limit: Int!): [Message]
   searchUsers(keywords: String!): [User]
+  tvShows: [TvShow]
 }
 
 type Ranking {
