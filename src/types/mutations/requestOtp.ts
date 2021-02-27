@@ -6,18 +6,18 @@ const otp = (Math.floor(Math.random() * (9999 - 1000 + 1)) + 1000).toString()
 
 export const requestOtp = mutationField('requestOtp', {
   type: 'String',
-  args: { country_id: nonNull(stringArg()), mobile: nonNull(stringArg()) },
-  resolve: async (parent, { country_id, mobile }, { prisma }) => {
+  args: { countryId: nonNull(stringArg()), mobile: nonNull(stringArg()) },
+  resolve: async (parent, { countryId, mobile }, { prisma }) => {
     try {
       if (process.env.NODE_ENV !== 'development') {
         const country = await prisma.country.findFirst({
-          where: { id: country_id },
+          where: { id: countryId },
         })
 
         const params = new URLSearchParams({
           authkey: process.env.MSG91_KEY,
           template_id: process.env.MSG91_TEMPLATE_ID,
-          mobile: `${country?.phonecode}${mobile}`,
+          mobile: `${country?.countryCode}${mobile}`,
           otp,
           extra_param: JSON.stringify({
             OTP: otp,

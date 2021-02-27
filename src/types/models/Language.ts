@@ -6,7 +6,7 @@ export const Language = objectType({
     t.model.id()
     t.model.name()
     t.model.nickname()
-    t.model.created_at()
-    t.model.updated_at()
+    t.model.createdAt()
+    t.model.updatedAt()
   },
 })

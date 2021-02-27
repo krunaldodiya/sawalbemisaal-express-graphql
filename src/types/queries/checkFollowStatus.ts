@@ -3,10 +3,10 @@ import { userService } from '../../services/UserService'
 
 export const checkFollowStatus = queryField('checkFollowStatus', {
   type: 'FollowStatus',
-  args: { guest_id: nonNull(stringArg()) },
-  resolve: async (parent, { guest_id }, { user }) => {
+  args: { guestId: nonNull(stringArg()) },
+  resolve: async (parent, { guestId }, { user }) => {
     try {
-      return userService.checkFollowStatus(guest_id, user ? user.id : '')
+      return userService.checkFollowStatus(guestId, user ? user.id : '')
     } catch (error) {
       throw new Error(error)
     }

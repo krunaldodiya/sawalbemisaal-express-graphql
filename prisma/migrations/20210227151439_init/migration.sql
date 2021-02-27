@@ -8,7 +8,7 @@ CREATE TYPE "TransactionStatus" AS ENUM ('Success', 'Failed', 'Pending');
 CREATE TYPE "Gender" AS ENUM ('Male', 'Female', 'None');
 
 -- CreateEnum
-CREATE TYPE "RankingInput" AS ENUM ('Today', 'This_Month', 'All_Time');
+CREATE TYPE "RankingInput" AS ENUM ('Today', 'ThisMonth', 'AllTime');
 
 -- CreateEnum
 CREATE TYPE "PollStatus" AS ENUM ('PENDING', 'COMPLETED', 'CANCELLED');
@@ -23,8 +23,8 @@ CREATE TABLE "WalletTransaction" (
     "type" "TransactionType" NOT NULL DEFAULT E'Deposit',
     "status" "TransactionStatus" NOT NULL DEFAULT E'Pending',
     "meta" JSONB NOT NULL,
-    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updated_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "userId" TEXT,
     "walletId" TEXT,
 
@@ -36,8 +36,8 @@ CREATE TABLE "Wallet" (
     "id" TEXT NOT NULL,
     "balance" DECIMAL(65,30) NOT NULL,
     "userId" TEXT NOT NULL,
-    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updated_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     PRIMARY KEY ("id")
 );
@@ -49,8 +49,8 @@ CREATE TABLE "Contestant" (
     "image" TEXT NOT NULL,
     "status" "ContestantStatus" NOT NULL,
     "tvShowId" TEXT,
-    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updated_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     PRIMARY KEY ("id")
 );
@@ -61,8 +61,8 @@ CREATE TABLE "Poll" (
     "question" TEXT NOT NULL,
     "answer" TEXT NOT NULL,
     "status" "PollStatus" NOT NULL,
-    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updated_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     PRIMARY KEY ("id")
 );
@@ -73,8 +73,8 @@ CREATE TABLE "GroupMessage" (
     "groupId" TEXT NOT NULL,
     "senderId" TEXT NOT NULL,
     "message" TEXT NOT NULL,
-    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updated_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     PRIMARY KEY ("id")
 );
@@ -85,8 +85,8 @@ CREATE TABLE "Message" (
     "receiverId" TEXT NOT NULL,
     "senderId" TEXT NOT NULL,
     "message" TEXT NOT NULL,
-    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updated_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     PRIMARY KEY ("id")
 );
@@ -97,8 +97,8 @@ CREATE TABLE "TvShow" (
     "name" TEXT NOT NULL,
     "image" TEXT NOT NULL,
     "about" TEXT,
-    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updated_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     PRIMARY KEY ("id")
 );
@@ -108,9 +108,9 @@ CREATE TABLE "Episode" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "image" TEXT NOT NULL,
-    "air_date" TIMESTAMP(3) NOT NULL,
-    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updated_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "airDate" TIMESTAMP(3) NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "tvShowId" TEXT,
 
     PRIMARY KEY ("id")
@@ -122,8 +122,8 @@ CREATE TABLE "Ranking" (
     "userId" TEXT NOT NULL,
     "prize" TEXT NOT NULL,
     "period" TEXT NOT NULL,
-    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updated_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     PRIMARY KEY ("id")
 );
@@ -139,17 +139,17 @@ CREATE TABLE "User" (
     "dob" TEXT NOT NULL DEFAULT E'01-01-1990',
     "gender" "Gender" NOT NULL DEFAULT E'None',
     "avatar" TEXT,
-    "instagram_username" TEXT,
+    "instagramUsername" TEXT,
     "bio" TEXT,
     "admin" BOOLEAN NOT NULL DEFAULT false,
     "influencer" BOOLEAN NOT NULL DEFAULT false,
     "demo" BOOLEAN NOT NULL DEFAULT false,
     "status" BOOLEAN NOT NULL DEFAULT false,
-    "fcm_token" TEXT,
+    "fcmToken" TEXT,
     "version" TEXT,
-    "referral_code" TEXT,
-    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updated_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "referralCode" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "countryId" TEXT NOT NULL,
 
     PRIMARY KEY ("id")
@@ -160,8 +160,8 @@ CREATE TABLE "Language" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "nickname" TEXT NOT NULL,
-    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updated_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     PRIMARY KEY ("id")
 );
@@ -170,10 +170,10 @@ CREATE TABLE "Language" (
 CREATE TABLE "Country" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
-    "shortname" TEXT NOT NULL,
-    "phonecode" TEXT NOT NULL,
-    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updated_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "shortName" TEXT NOT NULL,
+    "countryCode" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     PRIMARY KEY ("id")
 );

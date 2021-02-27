@@ -6,7 +6,7 @@ import { userService } from '../services/UserService'
 export const followAdmin = new Queue('Follow Admin', config('redis'))
 
 followAdmin.process(async (job, done) => {
-  const { user_id } = job.data
+  const { userId } = job.data
 
   try {
     const admin = await prisma.user.findFirst({
@@ -14,7 +14,7 @@ followAdmin.process(async (job, done) => {
       rejectOnNotFound: true,
     })
 
-    userService.followUser({ user_id, guest_id: admin.id })
+    userService.followUser({ userId, guestId: admin.id })
   } catch (error) {
     throw new Error(error)
   }

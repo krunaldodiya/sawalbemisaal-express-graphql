@@ -6,20 +6,20 @@ import { userService } from '../../services/UserService'
 export const verifyOtp = mutationField('verifyOtp', {
   type: 'AuthPayload',
   args: {
-    country_id: nonNull(stringArg()),
+    countryId: nonNull(stringArg()),
     mobile: nonNull(stringArg()),
     otp: nonNull(stringArg()),
   },
-  resolve: async (parent, { country_id, mobile, otp }, { prisma }) => {
+  resolve: async (parent, { countryId, mobile, otp }, { prisma }) => {
     try {
       if (process.env.NODE_ENV !== 'development') {
         const country = await prisma.country.findFirst({
-          where: { id: country_id },
+          where: { id: countryId },
         })
 
         const params = new URLSearchParams({
           authkey: process.env.MSG91_KEY,
-          mobile: `${country?.phonecode}${mobile}`,
+          mobile: `${country?.countryCode}${mobile}`,
           otp,
         }).toString()
 
@@ -27,13 +27,13 @@ export const verifyOtp = mutationField('verifyOtp', {
         const { data } = await axios.get(url)
 
         if (data.type === 'success') {
-          return userService.createUser({ country_id, mobile })
+          return userService.createUser({ countryId, mobile })
         } else {
           throw new Error(data.message)
         }
       }
 
-      return userService.createUser({ country_id, mobile })
+      return userService.createUser({ countryId, mobile })
     } catch (error) {
       throw new Error(error)
     }

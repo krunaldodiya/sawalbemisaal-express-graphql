@@ -9,11 +9,11 @@ export const onMessageAdded = subscriptionField('onMessageAdded', {
       return pubsub.asyncIterator('MESSAGE_ADDED')
     },
     ({ payload }, args, { user }) => {
-      const { sender_id, receiver_id } = payload
+      const { senderId, receiverId } = payload
 
       if (!user) return false
 
-      return [sender_id, receiver_id].includes(user.id)
+      return [senderId, receiverId].includes(user.id)
     },
   ),
   resolve: ({ payload }, args, ctx) => {

@@ -5,9 +5,9 @@ export const Country = objectType({
   definition(t) {
     t.model.id()
     t.model.name()
-    t.model.shortname()
-    t.model.phonecode()
-    t.model.created_at()
-    t.model.updated_at()
+    t.model.shortName()
+    t.model.countryCode()
+    t.model.createdAt()
+    t.model.updatedAt()
   },
 })

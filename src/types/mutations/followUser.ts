@@ -3,12 +3,12 @@ import { userService } from '../../services/UserService'
 
 export const followUser = mutationField('followUser', {
   type: 'User',
-  args: { following_id: nonNull(stringArg()) },
-  resolve: async (parent, { following_id }, { user }) => {
+  args: { followingId: nonNull(stringArg()) },
+  resolve: async (parent, { followingId }, { user }) => {
     try {
       return userService.followUser({
-        user_id: user ? user.id : '',
-        guest_id: following_id,
+        userId: user ? user.id : '',
+        guestId: followingId,
       })
     } catch (error) {
       throw new Error(error)

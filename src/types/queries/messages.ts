@@ -4,19 +4,19 @@ export const messages = queryField((t) => {
   t.list.field('messages', {
     type: 'Message',
     args: {
-      buddy_id: nonNull(stringArg()),
+      buddyId: nonNull(stringArg()),
       cursor: arg({ type: 'Cursor' }),
       limit: nonNull(intArg()),
     },
-    resolve: async (parent, { buddy_id, cursor, limit }, { prisma, user }) => {
+    resolve: async (parent, { buddyId, cursor, limit }, { prisma, user }) => {
       try {
         return await prisma.message.findMany({
           cursor: cursor ?? undefined,
           take: limit,
           where: {
             OR: [
-              { sender_id: user ? user.id : '', receiver_id: buddy_id },
-              { sender_id: buddy_id, receiver_id: user ? user.id : '' },
+              { senderId: user ? user.id : '', receiverId: buddyId },
+              { senderId: buddyId, receiverId: user ? user.id : '' },
             ],
           },
         })

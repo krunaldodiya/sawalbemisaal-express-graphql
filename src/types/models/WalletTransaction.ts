@@ -13,11 +13,11 @@ export const WalletTransaction = objectType({
     t.field('type', { type: TransactionType })
     t.field('meta', { type: TransactionMeta })
 
-    t.model.user_id()
+    t.model.userId()
     t.model.user()
-    t.model.wallet_id()
+    t.model.walletId()
     t.model.wallet()
-    t.model.created_at()
-    t.model.updated_at()
+    t.model.createdAt()
+    t.model.updatedAt()
   },
 })

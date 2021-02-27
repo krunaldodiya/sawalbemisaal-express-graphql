@@ -7,10 +7,10 @@ import jwt from 'jsonwebtoken'
 export class UserService {
   async createUser({
     mobile,
-    country_id,
+    countryId,
   }: {
     mobile: string
-    country_id: string
+    countryId: string
   }) {
     const user = await prisma.user.findFirst({ where: { mobile } })
 
@@ -22,18 +22,18 @@ export class UserService {
       const newUser = await prisma.user.create({
         data: {
           mobile,
-          country_id,
-          referral_code: generatePin(),
+          countryId,
+          referralCode: generatePin(),
         },
       })
 
       await prisma.wallet.create({
         data: {
           balance: 10,
-          user_id: newUser.id,
-          wallet_transactions: {
+          userId: newUser.id,
+          walletTransactions: {
             create: {
-              user_id: newUser.id,
+              userId: newUser.id,
               amount: 10,
               type: 'Deposit',
               status: 'Success',
@@ -46,7 +46,7 @@ export class UserService {
         },
       })
 
-      followAdmin.add({ user_id: newUser.id })
+      followAdmin.add({ userId: newUser.id })
 
       return this.authenticate(newUser)
     } catch (error) {
@@ -55,9 +55,9 @@ export class UserService {
     }
   }
 
-  async findUserById(user_id: string) {
+  async findUserById(userId: string) {
     return await prisma.user.findFirst({
-      where: { id: user_id },
+      where: { id: userId },
       rejectOnNotFound: true,
     })
   }
@@ -71,49 +71,43 @@ export class UserService {
     return { token, user }
   }
 
-  async checkFollowStatus(guest_id: string, user_id: string) {
+  async checkFollowStatus(guestId: string, userId: string) {
     const guest = await prisma.user.findFirst({
       rejectOnNotFound: true,
       where: {
-        id: guest_id,
+        id: guestId,
       },
       include: {
         followers: {
-          where: { id: user_id },
+          where: { id: userId },
         },
         following: {
-          where: { id: user_id },
+          where: { id: userId },
         },
       },
     })
 
     return {
-      is_follower: guest.following.length ? true : false,
-      is_following: guest.followers.length ? true : false,
+      isFollower: guest.following.length ? true : false,
+      isFollowing: guest.followers.length ? true : false,
     }
   }
 
-  async followUser({
-    user_id,
-    guest_id,
-  }: {
-    user_id: string
-    guest_id: string
-  }) {
-    const { is_following } = await this.checkFollowStatus(guest_id, user_id)
+  async followUser({ userId, guestId }: { userId: string; guestId: string }) {
+    const { isFollowing } = await this.checkFollowStatus(guestId, userId)
 
     await prisma.user.update({
-      where: { id: user_id },
+      where: { id: userId },
       data: {
-        following: is_following
-          ? { disconnect: { id: guest_id } }
-          : { connect: { id: guest_id } },
+        following: isFollowing
+          ? { disconnect: { id: guestId } }
+          : { connect: { id: guestId } },
       },
     })
 
     return await prisma.user.findFirst({
       rejectOnNotFound: true,
-      where: { id: guest_id },
+      where: { id: guestId },
     })
   }
 }

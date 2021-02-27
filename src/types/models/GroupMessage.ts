@@ -1,11 +1,11 @@
 import { objectType } from 'nexus'
 
-export const Message = objectType({
-  name: 'Message',
+export const GroupMessage = objectType({
+  name: 'GroupMessage',
   definition(t) {
     t.model.id()
+    t.model.groupId()
     t.model.senderId()
-    t.model.receiverId()
     t.model.message()
     t.model.createdAt()
     t.model.updatedAt()
