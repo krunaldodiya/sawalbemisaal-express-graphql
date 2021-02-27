@@ -10,8 +10,14 @@ CREATE TYPE "Gender" AS ENUM ('Male', 'Female', 'None');
 -- CreateEnum
 CREATE TYPE "RankingInput" AS ENUM ('Today', 'This_Month', 'All_Time');
 
+-- CreateEnum
+CREATE TYPE "PollStatus" AS ENUM ('PENDING', 'COMPLETED', 'CANCELLED');
+
+-- CreateEnum
+CREATE TYPE "ContestantStatus" AS ENUM ('Eliminated', 'Safe');
+
 -- CreateTable
-CREATE TABLE "wallet_transactions" (
+CREATE TABLE "WalletTransaction" (
     "id" TEXT NOT NULL,
     "amount" DECIMAL(65,30) NOT NULL,
     "type" "TransactionType" NOT NULL DEFAULT E'Deposit',
@@ -19,28 +25,53 @@ CREATE TABLE "wallet_transactions" (
     "meta" JSONB NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "wallet_id" TEXT NOT NULL,
-    "user_id" TEXT NOT NULL,
+    "userId" TEXT,
+    "walletId" TEXT,
 
     PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "wallets" (
+CREATE TABLE "Wallet" (
     "id" TEXT NOT NULL,
     "balance" DECIMAL(65,30) NOT NULL,
+    "userId" TEXT NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "user_id" TEXT NOT NULL,
 
     PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "messages" (
+CREATE TABLE "Contestant" (
     "id" TEXT NOT NULL,
-    "receiver_id" TEXT NOT NULL,
-    "sender_id" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+    "image" TEXT NOT NULL,
+    "status" "ContestantStatus" NOT NULL,
+    "tvShowId" TEXT,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Poll" (
+    "id" TEXT NOT NULL,
+    "question" TEXT NOT NULL,
+    "answer" TEXT NOT NULL,
+    "status" "PollStatus" NOT NULL,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "GroupMessage" (
+    "id" TEXT NOT NULL,
+    "groupId" TEXT NOT NULL,
+    "senderId" TEXT NOT NULL,
     "message" TEXT NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -49,11 +80,11 @@ CREATE TABLE "messages" (
 );
 
 -- CreateTable
-CREATE TABLE "tv_shows" (
+CREATE TABLE "Message" (
     "id" TEXT NOT NULL,
-    "name" TEXT NOT NULL,
-    "image" TEXT NOT NULL,
-    "about" TEXT NOT NULL,
+    "receiverId" TEXT NOT NULL,
+    "senderId" TEXT NOT NULL,
+    "message" TEXT NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
@@ -61,22 +92,34 @@ CREATE TABLE "tv_shows" (
 );
 
 -- CreateTable
-CREATE TABLE "episodes" (
+CREATE TABLE "TvShow" (
+    "id" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+    "image" TEXT NOT NULL,
+    "about" TEXT,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Episode" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "image" TEXT NOT NULL,
     "air_date" TIMESTAMP(3) NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "tv_show_id" TEXT,
+    "tvShowId" TEXT,
 
     PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "rankings" (
+CREATE TABLE "Ranking" (
     "id" TEXT NOT NULL,
-    "user_id" TEXT NOT NULL,
+    "userId" TEXT NOT NULL,
     "prize" TEXT NOT NULL,
     "period" TEXT NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -86,7 +129,7 @@ CREATE TABLE "rankings" (
 );
 
 -- CreateTable
-CREATE TABLE "users" (
+CREATE TABLE "User" (
     "id" TEXT NOT NULL,
     "mobile" TEXT NOT NULL,
     "name" TEXT,
@@ -107,13 +150,13 @@ CREATE TABLE "users" (
     "referral_code" TEXT,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "country_id" TEXT NOT NULL,
+    "countryId" TEXT NOT NULL,
 
     PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "languages" (
+CREATE TABLE "Language" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "nickname" TEXT NOT NULL,
@@ -124,7 +167,7 @@ CREATE TABLE "languages" (
 );
 
 -- CreateTable
-CREATE TABLE "countries" (
+CREATE TABLE "Country" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "shortname" TEXT NOT NULL,
@@ -136,22 +179,34 @@ CREATE TABLE "countries" (
 );
 
 -- CreateTable
+CREATE TABLE "_ContestantToPoll" (
+    "A" TEXT NOT NULL,
+    "B" TEXT NOT NULL
+);
+
+-- CreateTable
 CREATE TABLE "_UserFollows" (
     "A" TEXT NOT NULL,
     "B" TEXT NOT NULL
 );
 
 -- CreateIndex
-CREATE UNIQUE INDEX "wallets_user_id_unique" ON "wallets"("user_id");
+CREATE UNIQUE INDEX "Wallet_userId_unique" ON "Wallet"("userId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "users.mobile_unique" ON "users"("mobile");
+CREATE UNIQUE INDEX "User.mobile_unique" ON "User"("mobile");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "users.username_unique" ON "users"("username");
+CREATE UNIQUE INDEX "User.username_unique" ON "User"("username");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "users.email_unique" ON "users"("email");
+CREATE UNIQUE INDEX "User.email_unique" ON "User"("email");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "_ContestantToPoll_AB_unique" ON "_ContestantToPoll"("A", "B");
+
+-- CreateIndex
+CREATE INDEX "_ContestantToPoll_B_index" ON "_ContestantToPoll"("B");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "_UserFollows_AB_unique" ON "_UserFollows"("A", "B");
@@ -160,25 +215,34 @@ CREATE UNIQUE INDEX "_UserFollows_AB_unique" ON "_UserFollows"("A", "B");
 CREATE INDEX "_UserFollows_B_index" ON "_UserFollows"("B");
 
 -- AddForeignKey
-ALTER TABLE "wallet_transactions" ADD FOREIGN KEY ("wallet_id") REFERENCES "wallets"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "WalletTransaction" ADD FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "wallet_transactions" ADD FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "WalletTransaction" ADD FOREIGN KEY ("walletId") REFERENCES "Wallet"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "wallets" ADD FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "Wallet" ADD FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "episodes" ADD FOREIGN KEY ("tv_show_id") REFERENCES "tv_shows"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "Contestant" ADD FOREIGN KEY ("tvShowId") REFERENCES "TvShow"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "rankings" ADD FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "Episode" ADD FOREIGN KEY ("tvShowId") REFERENCES "TvShow"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "users" ADD FOREIGN KEY ("country_id") REFERENCES "countries"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "Ranking" ADD FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "_UserFollows" ADD FOREIGN KEY ("A") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "User" ADD FOREIGN KEY ("countryId") REFERENCES "Country"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "_UserFollows" ADD FOREIGN KEY ("B") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "_ContestantToPoll" ADD FOREIGN KEY ("A") REFERENCES "Contestant"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_ContestantToPoll" ADD FOREIGN KEY ("B") REFERENCES "Poll"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_UserFollows" ADD FOREIGN KEY ("A") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_UserFollows" ADD FOREIGN KEY ("B") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
