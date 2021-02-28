@@ -38,7 +38,7 @@ type Country {
 }
 
 input Cursor {
-  id: String!
+  id: Int!
 }
 
 scalar DateTime
@@ -95,7 +95,7 @@ type Message {
 }
 
 type Mutation {
-  addMessage(message: String!, receiver_id: Int!): Message
+  addMessage(buddy_id: Int!, message: String!): Message
   addQueue(language_id: Int!): Language
   editProfile(dob: String!, email: String!, gender: Gender!, name: String!, username: String!): User
   followUser(following_id: Int!): User
