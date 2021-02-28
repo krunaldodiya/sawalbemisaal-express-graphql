@@ -1,12 +1,16 @@
-import { nonNull, queryField, stringArg } from 'nexus'
+import { intArg, nonNull, queryField } from 'nexus'
 import { userService } from '../../services/UserService'
 
 export const checkFollowStatus = queryField('checkFollowStatus', {
   type: 'FollowStatus',
-  args: { guestId: nonNull(stringArg()) },
-  resolve: async (parent, { guestId }, { user }) => {
+  args: { guest_id: nonNull(intArg()) },
+  resolve: async (parent, { guest_id }, { user }) => {
     try {
-      return userService.checkFollowStatus(guestId, user ? user.id : '')
+      if (user) {
+        return userService.checkFollowStatus(guest_id, user.id)
+      }
+
+      return { is_follower: false, is_following: false }
     } catch (error) {
       throw new Error(error)
     }

@@ -1,21 +1,18 @@
-import { mutationField, nonNull, stringArg } from 'nexus'
+import { intArg, mutationField, nonNull, stringArg } from 'nexus'
 
 export const addGroupMessage = mutationField('addGroupMessage', {
   type: 'GroupMessage',
   args: {
-    groupId: nonNull(stringArg()),
-    senderId: nonNull(stringArg()),
+    group_id: nonNull(intArg()),
     message: nonNull(stringArg()),
   },
-  resolve: async (
-    parent,
-    { groupId, senderId, message },
-    { prisma, user, pubsub },
-  ) => {
+  resolve: async (parent, { group_id, message }, { prisma, user, pubsub }) => {
+    if (!user) throw new Error('Unauthenticated')
+
     const newMessage = await prisma.groupMessage.create({
       data: {
-        groupId,
-        senderId: user ? user.id : '',
+        group_id,
+        sender_id: user.id,
         message,
       },
     })

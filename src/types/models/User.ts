@@ -5,7 +5,7 @@ export const User = objectType({
   name: 'User',
   definition(t) {
     t.model.id()
-    t.model.countryId()
+    t.model.country_id()
     t.model.country()
     t.model.wallet()
     t.model.following()
@@ -17,15 +17,15 @@ export const User = objectType({
     t.model.dob()
     t.model.gender()
     t.model.avatar()
-    t.model.instagramUsername()
+    t.model.instagram_username()
     t.model.bio()
     t.model.admin()
     t.model.influencer()
     t.model.demo()
     t.model.status()
-    t.model.fcmToken()
+    t.model.fcm_token()
     t.model.version()
-    t.model.referralCode()
+    t.model.referral_code()
 
     t.field('follow_status', {
       type: 'FollowStatus',
@@ -38,7 +38,7 @@ export const User = objectType({
       },
     })
 
-    t.model.createdAt()
-    t.model.updatedAt()
+    t.model.created_at()
+    t.model.updated_at()
   },
 })

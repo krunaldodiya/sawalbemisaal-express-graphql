@@ -8,7 +8,8 @@ export const TvShow = objectType({
     t.model.image()
     t.model.about()
     t.model.episodes()
-    t.model.createdAt()
-    t.model.updatedAt()
+    t.model.contestants()
+    t.model.created_at()
+    t.model.updated_at()
   },
 })

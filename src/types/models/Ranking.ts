@@ -7,7 +7,7 @@ export const Ranking = objectType({
     t.model.user()
     t.model.prize()
     t.model.period()
-    t.model.createdAt()
-    t.model.updatedAt()
+    t.model.created_at()
+    t.model.updated_at()
   },
 })

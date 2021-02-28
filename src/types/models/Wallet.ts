@@ -5,10 +5,10 @@ export const Wallet = objectType({
   definition(t) {
     t.model.id()
     t.model.balance()
-    t.model.userId()
+    t.model.user_id()
     t.model.user()
-    t.model.walletTransactions()
-    t.model.createdAt()
-    t.model.updatedAt()
+    t.model.wallet_transactions()
+    t.model.created_at()
+    t.model.updated_at()
   },
 })

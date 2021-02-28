@@ -42,54 +42,61 @@ enum ContestantStatus {
 }
 
 model WalletTransaction {
-  id     String            @id @default(uuid())
+  id Int @id @default(autoincrement())
+
   amount Float
   type   TransactionType   @default(Deposit)
   status TransactionStatus @default(Pending)
   meta   Json
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now()) @updatedAt
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now()) @updatedAt
 
-  user   User?   @relation(fields: [userId], references: [id])
-  userId String?
+  user    User? @relation(fields: [user_id], references: [id])
+  user_id Int?
 
-  wallet   Wallet? @relation(fields: [walletId], references: [id])
-  walletId String?
+  wallet    Wallet? @relation(fields: [wallet_id], references: [id])
+  wallet_id Int?
+
+  @@map("wallet_transactions")
 }
 
 model Wallet {
-  id      String @id @default(uuid())
+  id      Int   @id @default(autoincrement())
   balance Float
 
-  user   User   @relation(fields: [userId], references: [id])
-  userId String
+  user    User @relation(fields: [user_id], references: [id])
+  user_id Int
 
-  walletTransactions WalletTransaction[]
+  wallet_transactions WalletTransaction[]
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now()) @updatedAt
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now()) @updatedAt
+
+  @@map("wallet")
 }
 
 model Contestant {
-  id String @id @default(uuid())
+  id Int @id @default(autoincrement())
 
   name  String
   image String
 
   status ContestantStatus
 
-  tvShow   TvShow? @relation(fields: [tvShowId], references: [id])
-  tvShowId String?
+  tv_show    TvShow? @relation(fields: [tv_show_id], references: [id])
+  tv_show_id Int?
 
   polls Poll[]
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now()) @updatedAt
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now()) @updatedAt
+
+  @@map("contestants")
 }
 
 model Poll {
-  id String @id @default(uuid())
+  id Int @id @default(autoincrement())
 
   question String
   answer   String
@@ -97,127 +104,161 @@ model Poll {
 
   contestants Contestant[]
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now()) @updatedAt
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now()) @updatedAt
+
+  @@map("polls")
 }
 
 model GroupMessage {
-  id String @id @default(uuid())
+  id Int @id @default(autoincrement())
 
-  groupId  String
-  senderId String
-  message  String
+  group_id  Int
+  sender_id Int
+  message   String
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now()) @updatedAt
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now()) @updatedAt
+
+  @@map("group_messages")
 }
 
 model Message {
-  id String @id @default(uuid())
+  id Int @id @default(autoincrement())
 
-  receiverId String
-  senderId   String
-  message    String
+  receiver_id Int
+  sender_id   Int
+  message     String
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now()) @updatedAt
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now()) @updatedAt
+
+  @@map("messages")
 }
 
-model TvShow {
-  id String @id @default(uuid())
+model Todo {
+  id Int @id @default(autoincrement())
 
   name  String
   image String
   about String?
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now()) @updatedAt
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now()) @updatedAt
+
+  @@map("todos")
+}
+
+model TvShow {
+  id Int @id @default(autoincrement())
+
+  name  String
+  image String
+  about String?
+
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now()) @updatedAt
 
   episodes    Episode[]
   contestants Contestant[]
+
+  @@map("tv_shows")
 }
 
 model Episode {
-  id String @id @default(uuid())
+  id Int @id @default(autoincrement())
 
   name  String
   image String
 
-  airDate DateTime
+  air_date DateTime
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now()) @updatedAt
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now()) @updatedAt
 
-  tvShow   TvShow? @relation(fields: [tvShowId], references: [id])
-  tvShowId String?
+  tv_show    TvShow? @relation(fields: [tv_show_id], references: [id])
+  tv_show_id Int?
+
+  @@map("episodes")
 }
 
 model Ranking {
-  id String @id @default(uuid())
+  id Int @id @default(autoincrement())
 
-  user   User   @relation(fields: [userId], references: [id])
-  userId String
+  user    User @relation(fields: [user_id], references: [id])
+  user_id Int
 
   prize  String
   period String
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now()) @updatedAt
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now()) @updatedAt
+
+  @@map("rankings")
 }
 
 model User {
-  id                String  @id @default(uuid())
-  mobile            String  @unique
-  name              String?
-  username          String? @unique
-  email             String? @unique
-  password          String?
-  dob               String  @default("01-01-1990")
-  gender            Gender  @default(None)
-  avatar            String?
-  instagramUsername String?
-  bio               String?
-  admin             Boolean @default(false)
-  influencer        Boolean @default(false)
-  demo              Boolean @default(false)
-  status            Boolean @default(false)
+  id Int @id @default(autoincrement())
 
-  fcmToken     String?
-  version      String?
-  referralCode String?
+  mobile             String  @unique
+  name               String?
+  username           String? @unique
+  email              String? @unique
+  password           String?
+  dob                String  @default("01-01-1990")
+  gender             Gender  @default(None)
+  avatar             String?
+  instagram_username String?
+  bio                String?
+  admin              Boolean @default(false)
+  influencer         Boolean @default(false)
+  demo               Boolean @default(false)
+  status             Boolean @default(false)
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now()) @updatedAt
+  version       String?
+  fcm_token     String?
+  referral_code String?
 
-  countryId String
-  country   Country @relation(fields: [countryId], references: [id])
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now()) @updatedAt
 
-  wallet             Wallet?
-  walletTransactions WalletTransaction[]
+  country    Country @relation(fields: [country_id], references: [id])
+  country_id Int
+
+  wallet              Wallet?
+  wallet_transactions WalletTransaction[]
 
   following User[] @relation(name: "UserFollows", references: [id])
   followers User[] @relation(name: "UserFollows", references: [id])
 
   rankings Ranking[]
+
+  @@map("users")
 }
 
 model Language {
-  id       String @id @default(uuid())
+  id Int @id @default(autoincrement())
+
   name     String
   nickname String
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now()) @updatedAt
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now()) @updatedAt
+
+  @@map("languages")
 }
 
 model Country {
-  id          String @id @default(uuid())
-  name        String
-  shortName   String
-  countryCode String
+  id Int @id @default(autoincrement())
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now()) @updatedAt
+  name         String
+  short_name   String
+  country_code String
 
-  user User[]
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now()) @updatedAt
+
+  users User[]
+
+  @@map("countries")
 }

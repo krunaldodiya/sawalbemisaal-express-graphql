@@ -7,13 +7,34 @@ type AuthPayload {
   user: User
 }
 
-type Country {
-  countryCode: String!
-  createdAt: DateTime!
-  id: String!
+type Contestant {
+  created_at: DateTime!
+  id: Int!
+  image: String!
   name: String!
-  shortName: String!
-  updatedAt: DateTime!
+  polls(after: PollWhereUniqueInput, before: PollWhereUniqueInput, first: Int, last: Int): [Poll!]!
+  status: ContestantStatus
+  tv_show: TvShow
+  tv_show_id: Int
+  updated_at: DateTime!
+}
+
+enum ContestantStatus {
+  Deposit
+  Withdraw
+}
+
+input ContestantWhereUniqueInput {
+  id: Int
+}
+
+type Country {
+  country_code: String!
+  created_at: DateTime!
+  id: Int!
+  name: String!
+  short_name: String!
+  updated_at: DateTime!
 }
 
 input Cursor {
@@ -23,22 +44,22 @@ input Cursor {
 scalar DateTime
 
 type Episode {
-  airDate: DateTime!
-  createdAt: DateTime!
-  id: String!
+  air_date: DateTime!
+  created_at: DateTime!
+  id: Int!
   image: String!
   name: String!
-  tvShow: TvShow
-  updatedAt: DateTime!
+  tv_show: TvShow
+  updated_at: DateTime!
 }
 
 input EpisodeWhereUniqueInput {
-  id: String
+  id: Int
 }
 
 type FollowStatus {
-  isFollower: Boolean
-  isFollowing: Boolean
+  is_follower: Boolean
+  is_following: Boolean
 }
 
 enum Gender {
@@ -48,59 +69,78 @@ enum Gender {
 }
 
 type GroupMessage {
-  createdAt: DateTime!
-  groupId: String!
-  id: String!
+  created_at: DateTime!
+  group_id: Int!
+  id: Int!
   message: String!
-  senderId: String!
-  updatedAt: DateTime!
+  sender_id: Int!
+  updated_at: DateTime!
 }
 
 type Language {
-  createdAt: DateTime!
-  id: String!
+  created_at: DateTime!
+  id: Int!
   name: String!
   nickname: String!
-  updatedAt: DateTime!
+  updated_at: DateTime!
 }
 
 type Message {
-  createdAt: DateTime!
-  id: String!
+  created_at: DateTime!
+  id: Int!
   message: String!
-  receiverId: String!
-  senderId: String!
-  updatedAt: DateTime!
+  receiver_id: Int!
+  sender_id: Int!
+  updated_at: DateTime!
 }
 
 type Mutation {
-  addMessage(buddyId: String!, message: String!): Message
-  addQueue(languageId: String!): Language
+  addMessage(message: String!, receiver_id: Int!): Message
+  addQueue(language_id: Int!): Language
   editProfile(dob: String!, email: String!, gender: Gender!, name: String!, username: String!): User
-  followUser(followingId: String!): User
-  requestOtp(countryId: String!, mobile: String!): String
-  verifyOtp(countryId: String!, mobile: String!, otp: String!): AuthPayload
+  followUser(following_id: Int!): User
+  requestOtp(country_id: Int!, mobile: String!): String
+  verifyOtp(country_id: Int!, mobile: String!, otp: String!): AuthPayload
+}
+
+type Poll {
+  answer: String!
+  contestants(after: ContestantWhereUniqueInput, before: ContestantWhereUniqueInput, first: Int, last: Int): [Contestant!]!
+  created_at: DateTime!
+  id: Int!
+  question: String!
+  status: PollStatus
+  updated_at: DateTime!
+}
+
+enum PollStatus {
+  Deposit
+  Withdraw
+}
+
+input PollWhereUniqueInput {
+  id: Int
 }
 
 type Query {
-  checkFollowStatus(guestId: String!): FollowStatus
+  checkFollowStatus(guest_id: Int!): FollowStatus
   countries: [Country]
-  episodes(tvShowId: String!): [Episode]
-  findUserById(userId: String!): User
+  episodes(tv_show_id: Int!): [Episode]
+  findUserById(user_id: Int!): User
   getRankings(period: RankingInput!): [Ranking]
   languages: [Language]
   me: User
-  messages(buddyId: String!, cursor: Cursor, limit: Int!): [Message]
+  messages(buddy_id: Int!, cursor: Cursor, limit: Int!): [Message]
   searchUsers(keywords: String!): [User]
   tvShows: [TvShow]
 }
 
 type Ranking {
-  createdAt: DateTime!
-  id: String!
+  created_at: DateTime!
+  id: Int!
   period: String!
   prize: String!
-  updatedAt: DateTime!
+  updated_at: DateTime!
   user: User!
 }
 
@@ -132,12 +172,13 @@ enum TransactionType {
 
 type TvShow {
   about: String
-  createdAt: DateTime!
+  contestants(after: ContestantWhereUniqueInput, before: ContestantWhereUniqueInput, first: Int, last: Int): [Contestant!]!
+  created_at: DateTime!
   episodes(after: EpisodeWhereUniqueInput, before: EpisodeWhereUniqueInput, first: Int, last: Int): [Episode!]!
-  id: String!
+  id: Int!
   image: String!
   name: String!
-  updatedAt: DateTime!
+  updated_at: DateTime!
 }
 
 type User {
@@ -145,24 +186,24 @@ type User {
   avatar: String
   bio: String
   country: Country!
-  countryId: String!
-  createdAt: DateTime!
+  country_id: Int!
+  created_at: DateTime!
   demo: Boolean!
   dob: String!
   email: String
-  fcmToken: String
+  fcm_token: String
   follow_status: FollowStatus
   followers(after: UserWhereUniqueInput, before: UserWhereUniqueInput, first: Int, last: Int): [User!]!
   following(after: UserWhereUniqueInput, before: UserWhereUniqueInput, first: Int, last: Int): [User!]!
   gender: Gender!
-  id: String!
+  id: Int!
   influencer: Boolean!
-  instagramUsername: String
+  instagram_username: String
   mobile: String!
   name: String
-  referralCode: String
+  referral_code: String
   status: Boolean!
-  updatedAt: DateTime!
+  updated_at: DateTime!
   username: String
   version: String
   wallet: Wallet
@@ -170,35 +211,35 @@ type User {
 
 input UserWhereUniqueInput {
   email: String
-  id: String
+  id: Int
   mobile: String
   username: String
 }
 
 type Wallet {
   balance: Float!
-  createdAt: DateTime!
-  id: String!
-  updatedAt: DateTime!
+  created_at: DateTime!
+  id: Int!
+  updated_at: DateTime!
   user: User!
-  userId: String!
-  walletTransactions(after: WalletTransactionWhereUniqueInput, before: WalletTransactionWhereUniqueInput, first: Int, last: Int): [WalletTransaction!]!
+  user_id: Int!
+  wallet_transactions(after: WalletTransactionWhereUniqueInput, before: WalletTransactionWhereUniqueInput, first: Int, last: Int): [WalletTransaction!]!
 }
 
 type WalletTransaction {
   amount: Float!
-  createdAt: DateTime!
-  id: String!
+  created_at: DateTime!
+  id: Int!
   meta: TransactionMeta
   status: TransactionStatus
   type: TransactionType
-  updatedAt: DateTime!
+  updated_at: DateTime!
   user: User
-  userId: String
+  user_id: Int
   wallet: Wallet
-  walletId: String
+  wallet_id: Int
 }
 
 input WalletTransactionWhereUniqueInput {
-  id: String
+  id: Int
 }

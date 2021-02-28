@@ -1,5 +1,4 @@
 import { arg, nonNull, queryField } from 'nexus'
-import { RankingInput } from '../enums/RankingInput'
 
 export const getRankings = queryField((t) => {
   t.list.field('getRankings', {

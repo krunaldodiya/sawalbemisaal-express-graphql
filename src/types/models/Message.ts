@@ -4,10 +4,10 @@ export const Message = objectType({
   name: 'Message',
   definition(t) {
     t.model.id()
-    t.model.senderId()
-    t.model.receiverId()
+    t.model.sender_id()
+    t.model.receiver_id()
     t.model.message()
-    t.model.createdAt()
-    t.model.updatedAt()
+    t.model.created_at()
+    t.model.updated_at()
   },
 })

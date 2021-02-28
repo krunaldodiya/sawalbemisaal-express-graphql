@@ -6,9 +6,9 @@ export const Episode = objectType({
     t.model.id()
     t.model.name()
     t.model.image()
-    t.model.tvShow()
-    t.model.airDate()
-    t.model.createdAt()
-    t.model.updatedAt()
+    t.model.tv_show()
+    t.model.air_date()
+    t.model.created_at()
+    t.model.updated_at()
   },
 })

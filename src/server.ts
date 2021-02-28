@@ -9,6 +9,7 @@ import { SubscriptionServer } from 'subscriptions-transport-ws'
 import { createContext, prisma, pubsub } from './context'
 import { config } from './libs/config'
 import { getUserFromToken } from './libs/getUserFromToken'
+import { adminRoutes } from './routes/admin'
 import { homeRoutes } from './routes/home'
 import { schemaWithMiddleware } from './schema'
 
@@ -23,6 +24,7 @@ app.set('view engine', 'pug')
 app.set('views', config('views'))
 
 app.use(homeRoutes)
+app.use(adminRoutes)
 
 app.use(bodyParser.urlencoded({ extended: true }))
 

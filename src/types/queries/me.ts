@@ -4,6 +4,10 @@ import { userService } from '../../services/UserService'
 export const me = queryField('me', {
   type: 'User',
   resolve: (parent, args, { prisma, user }) => {
-    return userService.findUserById(user ? user.id : '')
+    if (user) {
+      return userService.findUserById(user.id)
+    }
+
+    return null
   },
 })
