@@ -7,6 +7,7 @@ export const tvShows = queryField((t) => {
       try {
         return await prisma.tvShow.findMany()
       } catch (error) {
+        console.log('error', error)
         throw new Error(error)
       }
     },

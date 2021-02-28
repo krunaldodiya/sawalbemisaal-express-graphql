@@ -20,8 +20,8 @@ export const permissions = shield({
     messages: isAuthenticated,
     searchUsers: isAuthenticated,
     getRankings: isAuthenticated,
-    tvShows: isAdmin,
-    episodes: isAdmin,
+    tvShows: isAuthenticated,
+    episodes: isAuthenticated,
   },
   Mutation: {
     addQueue: isAuthenticated,
